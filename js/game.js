@@ -1,58 +1,68 @@
+	var canvas = document.getElementById("target");
+	var ctx = canvas.getContext("2d");
 
-    var Game = function() {   
+    var Game = function() {		
+		this.events();
 		this.load();
 		this.step();
 	} 
+	
+	Game.prototype.events = function() {
+		canvas.addEventListener('mousedown', Game.prototype.movePlayer);
+		canvas.addEventListener('mouseup', Game.prototype.stopPlayer);   
+		canvas.addEventListener('touchstart', Game.prototype.movePlayer);
+		canvas.addEventListener('touchend', Game.prototype.stopPlayer);  
+	}
 
 	Game.prototype.level = 1;	  
 	Game.prototype.GAME_HEIGHT = 360;
 	Game.prototype.GAME_WIDTH = 640;
 	Game.prototype.gameLive = true;
 	Game.prototype.enemies = [
-	{	
-	  x: 100, 
-	  y: 100, 
-	  speedY: 2, 
-	  w: 40, 
-	  h: 40 
-	},
-	{
-	  x: 200,
-	  y: 0,
-	  speedY: 2,
-	  w: 40,
-	  h: 40
-	},
-	{
-	  x: 330,
-	  y: 100,
-	  speedY: 1,
-	  w: 40,
-	  h: 40
-	},
-	{
-	  x: 450,
-	  y: 100,
-	  speedY: -1,
-	  w: 40,
-	  h: 40
-	}
+		{	
+		  x: 100, 
+		  y: 100, 
+		  speedY: 2, 
+		  w: 40, 
+		  h: 40 
+		},
+		{
+		  x: 200,
+		  y: 0,
+		  speedY: 2,
+		  w: 40,
+		  h: 40
+		},
+		{
+		  x: 330,
+		  y: 100,
+		  speedY: 1,
+		  w: 40,
+		  h: 40
+		},
+		{
+		  x: 450,
+		  y: 100,
+		  speedY: -1,
+		  w: 40,
+		  h: 40
+		}
 	];
 
 	Game.prototype.player = {
-	x: 10,
-	y: 160,
-	speedX: 2.5,
-	isMoving: false,
-	w: 40,
-	h: 40
+		x: 10,
+		y: 160,
+		speedX: 2.5,
+		isMoving: false,
+		w: 40,
+		h: 40
 	};
 
 	Game.prototype.goal = {
-	x: 580,
-	y: 160,
-	w: 50,
-	h: 36
+		x: 580,
+		y: 160,
+		w: 50,
+		h: 36
 	}
 
 	Game.prototype.sprites = {};
@@ -62,33 +72,22 @@
 	}
 
 	Game.prototype.stopPlayer = function() {
-	Game.prototype.player.isMoving = false;
-	}
-
-	//grab the canvas and context
-	var canvas = document.getElementById("target");
-	var ctx = canvas.getContext("2d");
-
-	//event listeners to move player
-	canvas.addEventListener('mousedown', Game.prototype.movePlayer);
-	canvas.addEventListener('mouseup', Game.prototype.stopPlayer);   
-	canvas.addEventListener('touchstart', Game.prototype.movePlayer);
-	canvas.addEventListener('touchend', Game.prototype.stopPlayer);   
-
+		Game.prototype.player.isMoving = false;
+	}	
+	
 	Game.prototype.load = function() {
 
 	this.sprites.player = new Image();
-	this.sprites.player.src = 'images/hero.png';
+	this.sprites.player.src = 'images/bear.png';
 
 	this.sprites.background = new Image();
-	this.sprites.background.src = 'images/floor.png';
+	this.sprites.background.src = 'images/bg.png';
 
 	this.sprites.enemy = new Image();
-		this.sprites.enemy.src = 'images/b'+this.level+'.png';
-		//this.sprites.enemy.src = 'images/b1.png';
+	this.sprites.enemy.src = 'images/b'+this.level+'.png';
 
 	this.sprites.goal = new Image();
-	this.sprites.goal.src = 'images/chest.png';
+	this.sprites.goal.src = 'images/goal.png';
 
 	};
 
