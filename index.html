@@ -1,16 +1,15 @@
 <html>
 <head>
-  <title>canvas game</title>
+  <title>Polar Panic</title>
   <meta name="viewport" content="width=device-width, user-scalable=no" />
   <style>
     canvas {
-      border: 1px solid #777; 
-	  width: 100%;
+      border: 1px solid black;
+      width: 100%;
     }
   </style>
 </head>
 <body>
-  
   <canvas id="mycanvas" width="640" height="360" ></canvas>
   <script>
     window.addEventListener("load",function() {
@@ -18,50 +17,52 @@
       //constants
       var GAME_WIDTH = 640;
       var GAME_HEIGHT = 360;
-	  var level = 4;
-	  var speed = 2;
-	  var enemyType;
+
+      //keep the game going
       var gameLive = true;
+
+      //current level
+      var level = 1;
+
 
       //enemies
       var enemies = [
         {
           x: 100, 
           y: 100, 
-          speedY: speed, 
+          speedY: 2, 
           w: 40, 
           h: 40 
         },
         {
           x: 200,
           y: 0,
-          speedY: speed,
+          speedY: 2,
           w: 40,
           h: 40
         },
         {
           x: 330,
           y: 100,
-          speedY: speed,
+          speedY: 1,
           w: 40,
           h: 40
         },
         {
           x: 450,
-          y: 190,
-          speedY: speed,
+          y: 100,
+          speedY: -1,
           w: 40,
           h: 40
         }
       ];
-
 
       //the player object
       var player = {
         x: 10,
         y: 160,
         speedX: 2.5,
-        isMoving: 0,
+        isMoving: false,  //keep track whether the player is moving or not
         w: 40,
         h: 40
       };
@@ -83,29 +84,18 @@
       var stopPlayer = function() {
         player.isMoving = false;
       }
-	  
-	  var removeCover = function() {
-
-		ctx.clearRect(0,0,GAME_WIDTH,GAME_HEIGHT);  
-	  }
       
       //grab the canvas and context
       var canvas = document.getElementById("mycanvas");
       var ctx = canvas.getContext("2d");
-	  
-
 
       //event listeners to move player
-
       canvas.addEventListener('mousedown', movePlayer);
       canvas.addEventListener('mouseup', stopPlayer);   
       canvas.addEventListener('touchstart', movePlayer);
       canvas.addEventListener('touchend', stopPlayer);   
 
       var load = function() {
-		sprites.cover = new Image();
-        sprites.cover.src = 'images/cover.png';	  
-	  
         sprites.player = new Image();
         sprites.player.src = 'images/hero.png';
 
@@ -113,8 +103,7 @@
         sprites.background.src = 'images/floor.png';
 
         sprites.enemy = new Image();
-
-		sprites.enemy.src = 'images/b'+level+'.png';     
+        sprites.enemy.src = 'images/b'+level+'.png';
 
         sprites.goal = new Image();
         sprites.goal.src = 'images/chest.png';
@@ -125,13 +114,25 @@
 
         //check if you've won the game
         if(checkCollision(player, goal)) {
-          //stop the game
-            gameLive = false;
+          
 
-            alert('You\'ve won!');
+          //increase the level
+          level++;
 
-            //reload page
-            window.location = "";
+          //set the player back to the start
+          player.x = 10;
+          player.y = 160;
+
+          //increase the speed of the enemies by 1
+          enemies.forEach(function(element, index){
+            element.speedY += element.speedY/Math.abs(element.speedY);
+          });
+
+          //look in the console
+          console.log(level);
+          console.log(enemies);
+		  sprites.enemy.src = 'images/b'+level+'.png';
+            
         }
 
         //update player
@@ -149,9 +150,8 @@
           if(checkCollision(player, element)) {
             //stop the game
             gameLive = false;
-			
-			sprites.player.src = 'images/hero2.png';
 
+            alert('Game Over!');
 
             //reload page
             window.location = "";
@@ -172,7 +172,6 @@
           }
         });
       };
-	  
 
       //show the game on the screen
       var draw = function() {
@@ -192,10 +191,6 @@
 
         //draw goal
         ctx.drawImage(sprites.goal, goal.x, goal.y);
-		
-		//draw cover
-        //ctx.drawImage(sprites.cover, 0, 0);	  
-
       };
 
       //gets executed multiple times per second
@@ -211,6 +206,7 @@
 
       //check the collision between two rectangles
       var checkCollision = function(rect1, rect2) {
+
         var closeOnWidth = Math.abs(rect1.x - rect2.x) <= Math.max(rect1.w, rect2.w);
         var closeOnHeight = Math.abs(rect1.y - rect2.y) <= Math.max(rect1.h, rect2.h);
         return closeOnWidth && closeOnHeight;
@@ -218,7 +214,6 @@
 
       //initial kick
       load();
-	  //cover();
       step();
     });
   </script>
