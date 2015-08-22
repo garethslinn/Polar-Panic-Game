@@ -66,7 +66,7 @@
 	}
 
 	//grab the canvas and context
-	var canvas = document.getElementById("mycanvas");
+	var canvas = document.getElementById("target");
 	var ctx = canvas.getContext("2d");
 
 	//event listeners to move player
